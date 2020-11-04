@@ -27,15 +27,24 @@ function findSteps(id) {
     
 }
 
-function add() {
-    return console.log('wired')
+async function add(scheme) {
+    const [id] = await db('schemes').insert(scheme)
+    return db('schemes').where({id}).first()
 }
 
-function update() {
-    return console.log('wired')
+async function update(id, changes) {
+    const count = await db('schemes').where({id}).update(changes)
+    if (count) {
+        return db('schemes').where({id}).first()
+    } else {
+        return Promise.resolve(null)
+    }
 }
 
-function remove() {
-    return console.log('wired')
+async function remove(id) {
+    const scheme = await db('schemes').where({id}).first()
+    if(!scheme) return Promise.resolve(null)
+    await db('schemes').where({id}).del()
+    return Promise.resolve(scheme)
 }
 
